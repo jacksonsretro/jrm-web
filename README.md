@@ -1,5 +1,11 @@
-# JRM Web v0.2.2
+# JRM Web v0.2.3
 
-Retro branding refresh using the supplied Jacksons Retro logo and alien icon.
+Static GitHub Pages build.
 
-Deploy directly from the `main` branch root with GitHub Pages.
+## New in this version
+- Expandable Internal Stock dashboard section
+- Live Users Online dashboard panel using Supabase Realtime Presence
+- Full web User Manager for creating users and resetting passwords
+- Existing retro branding, inventory, sales, watch list and attachments retained
+
+The existing `manage-user` Edge Function must remain deployed with Verify JWT enabled.
