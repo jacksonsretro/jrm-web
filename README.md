@@ -1,15 +1,12 @@
-# JRM Web v0.2.6
+# JRM Web v0.2.7
 
-Grouped platform selectors for Inventory and Watch List.
+Static GitHub Pages build for Jacksons Retro Manager.
 
-Platform choices are organised into:
-- Non-platform items
-- Nintendo
-- Sega
-- Sony
-- Microsoft
-- Computer & Other
+## Changes
+- Simplified internal-use login screen
+- Username must now be typed rather than selected
+- Generic invalid-login message to avoid confirming account names
+- JRM Web title above the sign-in panel
+- Jacksons Retro logo retained as the only branding text on the left
 
-Use `N/A — Books, Guides & Non-platform Items` for game guides, books and stock that is not tied to a console platform.
-
-Deploy by copying all files to the root of the GitHub Pages repository and publishing from the `main` branch.
+Deploy directly from the `main` branch root.
