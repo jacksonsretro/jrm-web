@@ -1,14 +1,56 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#111b29" />
-    <meta name="description" content="Jacksons Retro Manager" />
-    <title>Jacksons Retro Manager</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111b29" />
+  <title>Jacksons Retro Manager</title>
+  <style>
+    :root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#152132;background:#f3f6fa}*{box-sizing:border-box}body{margin:0;min-width:320px;min-height:100vh}.shell{min-height:100vh;display:grid;grid-template-columns:minmax(360px,1.08fr) minmax(420px,.92fr)}.brand{background:linear-gradient(145deg,#101a28,#18283a 55%,#0a6db4 150%);color:white;padding:clamp(48px,8vw,110px);display:flex;flex-direction:column;justify-content:center}.mark{width:78px;height:78px;border-radius:20px;background:#0879d1;display:grid;place-items:center;font-size:2rem;font-weight:900;box-shadow:0 16px 35px #0003;margin-bottom:28px}.eyebrow{font-size:.74rem;font-weight:800;letter-spacing:.16em;color:#5bb9ff;margin:0 0 10px}.brand h1{font-size:clamp(2.2rem,4vw,4.2rem);line-height:1.02;margin:0 0 22px;max-width:700px}.brand p{font-size:1.08rem;line-height:1.7;color:#cbd7e4;max-width:650px}.features{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.features span{border:1px solid #ffffff2b;background:#ffffff0e;border-radius:999px;padding:9px 13px}.loginSide{display:grid;place-items:center;padding:36px;background:#f4f7fb}.card{width:min(100%,480px);background:white;border:1px solid #dfe6ee;border-radius:22px;box-shadow:0 24px 65px #17283a1a;padding:36px}.card h2{font-size:1.8rem;margin:0 0 7px}.sub{margin:0 0 26px;color:#69778a}.form{display:grid;gap:17px}.form label{display:grid;gap:8px;font-weight:700;font-size:.9rem}.form input,.form select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:13px 14px;background:white}.btn{border:0;border-radius:10px;padding:13px 18px;font-weight:800;cursor:pointer}.primary{background:#0879d1;color:white}.secondary{background:#142133;color:white}.btn:disabled{opacity:.55;cursor:not-allowed}.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#94a3b8}.divider:before,.divider:after{content:"";height:1px;background:#e2e8f0;flex:1}.message{margin-top:17px;padding:12px 14px;border-radius:9px;background:#eef6ff;color:#155b91;font-size:.9rem;white-space:pre-wrap}.error{background:#fff1f2;color:#9f1239}.loading{min-height:100vh;display:grid;place-items:center;color:#66758a}.dashboard{min-height:100vh;background:#f3f6fa}.top{height:72px;background:#111b29;color:white;display:flex;align-items:center;padding:0 28px;gap:14px}.top .mini{width:36px;height:36px;border-radius:9px;background:#0879d1;display:grid;place-items:center;font-weight:900}.top .who{margin-left:auto;text-align:right}.top small{display:block;color:#9eb0c3}.signout{margin-left:12px;border:1px solid #ffffff2c;background:transparent;color:white;border-radius:9px;padding:9px 13px}.content{max-width:1400px;margin:auto;padding:42px}.content h1{font-size:2.3rem}.panel{background:white;border:1px solid #dfe6ed;border-radius:16px;padding:24px;box-shadow:0 7px 22px #1522360a}@media(max-width:820px){.shell{grid-template-columns:1fr}.brand{padding:42px 28px}.loginSide{padding:24px}.card{padding:26px}.features{display:none}}
+  </style>
+</head>
+<body>
+<div id="app"><div class="loading">Loading Jacksons Retro Manager…</div></div>
+<script type="module">
+  const app = document.getElementById('app');
+  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+  function fatal(message){app.innerHTML=`<main class="loading"><section class="card"><h2>JRM could not start</h2><p class="sub">The page loaded, but the application encountered an error.</p><div class="message error">${esc(message)}</div></section></main>`;}
+  window.addEventListener('error',e=>fatal(e.message||e.error));
+  window.addEventListener('unhandledrejection',e=>fatal(e.reason?.message||e.reason));
+  try {
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.45.4');
+    const supabase = createClient('https://vfrmywbelxsxgqoswemr.supabase.co','sb_publishable_Y5tQrPxbb7N3WKJmpLR05w_H7k2KxrA',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    let users=[];
+    async function loadUsers(){
+      const {data,error}=await supabase.rpc('list_login_users');
+      if(error) throw error;
+      users=(data||[]).filter(x=>x.is_active!==false);
+    }
+    function loginHtml(message=''){
+      const opts=users.map(u=>`<option value="${esc(u.username)}">${esc(u.display_name||u.username)} (${esc(String(u.username).toUpperCase())})</option>`).join('');
+      app.innerHTML=`<main class="shell"><section class="brand"><div class="mark">JR</div><p class="eyebrow">JACKSONS RETRO</p><h1>Inventory, sales and sourcing in one place.</h1><p>Manage stock, track profit, preserve sales history and work securely from any device.</p><div class="features"><span>Shared inventory</span><span>Sales history</span><span>Secure access</span></div></section><section class="loginSide"><div class="card"><h2>Welcome back</h2><p class="sub">Choose your account to continue.</p><form id="login" class="form"><label>User<select id="user" required>${opts}</select></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button id="submit" class="btn primary" type="submit">Sign in</button></form><div class="divider">or</div><button id="passkey" class="btn secondary" style="width:100%" type="button">Sign in with a passkey</button><p style="text-align:center;color:#718096;font-size:.8rem;line-height:1.45">Passkey support will be enabled after the basic web login is confirmed working.</p>${message?`<div class="message error">${esc(message)}</div>`:''}</div></section></main>`;
+      document.getElementById('login').addEventListener('submit',signIn);
+      document.getElementById('passkey').addEventListener('click',()=>alert('Passkeys will be enabled in the next authentication build after the standard login is verified.'));
+    }
+    async function signIn(e){
+      e.preventDefault(); const b=document.getElementById('submit'); b.disabled=true; b.textContent='Signing in…';
+      const username=document.getElementById('user').value; const password=document.getElementById('password').value;
+      const selected=users.find(u=>String(u.username).toLowerCase()===username.toLowerCase());
+      const email=selected?.auth_email || selected?.email || `${username.toLowerCase()}@users.jacksonsretro.local`;
+      const {data,error}=await supabase.auth.signInWithPassword({email,password});
+      if(error){loginHtml(error.message);return;}
+      await showDashboard(data.user);
+    }
+    async function showDashboard(user){
+      const {data:profile,error}=await supabase.from('profiles').select('user_id,username,display_name,role,is_active').eq('user_id',user.id).single();
+      if(error){await supabase.auth.signOut();loginHtml('Signed in, but the JRM profile could not be loaded: '+error.message);return;}
+      app.innerHTML=`<main class="dashboard"><header class="top"><div class="mini">JR</div><strong>Jacksons Retro Manager</strong><div class="who"><strong>${esc(profile.display_name||profile.username)}</strong><small>${esc(profile.role)}</small></div><button id="signout" class="signout">Sign out</button></header><section class="content"><p class="eyebrow" style="color:#0879d1">DASHBOARD</p><h1>Welcome, ${esc(profile.display_name||profile.username)}</h1><div class="panel"><h2>JRM Web is connected</h2><p>The web application has loaded successfully and your existing Supabase account is working.</p><p>Next we will restore the complete dashboard, authenticator support and passkeys.</p></div></section></main>`;
+      document.getElementById('signout').onclick=async()=>{await supabase.auth.signOut();loginHtml();};
+    }
+    await loadUsers();
+    const {data:{session}}=await supabase.auth.getSession();
+    if(session?.user) await showDashboard(session.user); else loginHtml();
+  } catch(e){fatal(e?.message||String(e));}
+</script>
+</body>
 </html>
